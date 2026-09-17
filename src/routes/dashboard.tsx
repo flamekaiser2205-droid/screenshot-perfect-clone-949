@@ -104,7 +104,7 @@ function Dashboard() {
       .insert({ client_id: clientId, freelancer_id: freelancerId })
       .select()
       .single();
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setConversations((prev) => [...prev, data as Conversation]);
     setActiveChat((data as Conversation).id);
   }
@@ -267,7 +267,7 @@ function PostProject({
   const [busy, setBusy] = useState(false);
 
   async function submit() {
-    if (!title.trim()) return toast.error("Give the project a title");
+    if (!title.trim()) { toast.error("Give the project a title"); return; }
     setBusy(true);
     const { error } = await supabase.from("projects").insert({
       client_id: userId,
@@ -277,7 +277,7 @@ function PostProject({
       skills,
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Project posted");
     setTitle("");
     setDescription("");
@@ -437,7 +437,7 @@ function ReviewForm({
         { reviewer_id: reviewerId, reviewee_id: revieweeId, rating, comment },
         { onConflict: "reviewer_id,reviewee_id" },
       );
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Review saved");
     setOpen(false);
     setComment("");
@@ -522,7 +522,7 @@ function MyProjects({
                                 .from("applications")
                                 .update({ status: "accepted" })
                                 .eq("id", a.id);
-                              if (error) return toast.error(error.message);
+                              if (error) { toast.error(error.message); return; }
                               onMessage(a.freelancer_id);
                               onChanged();
                             }}
@@ -615,7 +615,7 @@ function JobFeed({
                         freelancer_id: me.id,
                         pitch: pitch[p.id] ?? "",
                       });
-                      if (error) return toast.error(error.message);
+                      if (error) { toast.error(error.message); return; }
                       toast.success("Application sent");
                       onApplied();
                     }}
@@ -649,7 +649,7 @@ function ProfileBuilder({ profile, onSaved }: { profile: Profile; onSaved: () =>
       .update({ headline, bio, skills, hourly_rate: rate ? Number(rate) : null })
       .eq("id", profile.id);
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Profile updated");
     onSaved();
   }

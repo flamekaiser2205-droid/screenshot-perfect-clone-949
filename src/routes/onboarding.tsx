@@ -47,8 +47,8 @@ function Onboarding() {
 
   async function save() {
     if (!userId) return;
-    if (!name.trim()) return toast.error("Add your name first");
-    if (skills.length === 0) return toast.error("Pick at least one interest");
+    if (!name.trim()) { toast.error("Add your name first"); return; }
+    if (skills.length === 0) { toast.error("Pick at least one interest"); return; }
     setBusy(true);
     const { error } = await supabase.from("profiles").upsert({
       id: userId,
@@ -60,7 +60,7 @@ function Onboarding() {
       hourly_rate: rate ? Number(rate) : null,
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await refreshProfile();
     void navigate({ to: "/dashboard" });
   }
